@@ -76,6 +76,82 @@ const Context = (seededRandom = DEFAULT_SEEDED_RANDOM) => {
     });
   }
 
+
+  {
+    const blurWeightMap = (blurSize) => {
+
+      // let weightMax = Number.MIN_VALUE;
+      // let weightMin = Number.MAX_VALUE;
+
+      const clamp = (val, min, max) => {
+        return Math.min(Math.max(val, min), max);
+      };
+
+      const weightsHorizPass = [];
+      for (let i = 0; i < NODES_PER_ROW; i++) {
+        weightsHorizPass[i] = [];
+        for (let j = 0; j < NODES_PER_COL; j++) {
+          weightsHorizPass[i][j] = 0;
+        }
+      }
+
+      const weightsVertPass = [];
+      for (let i = 0; i < NODES_PER_ROW; i++) {
+        weightsVertPass[i] = [];
+        for (let j = 0; j < NODES_PER_COL; j++) {
+          weightsVertPass[i][j] = 0;
+        }
+      }
+
+      const kernalSize = blurSize * 2 - 1;
+      const kernalExtents = (kernalSize - 1) / 2;
+
+      for (let j = 0; j < NODES_PER_COL; j++) {
+        for (let i = -kernalExtents; i <= kernalExtents; i++) {
+          let sampleI = clamp(i, 0, kernalExtents);
+          weightsHorizPass[0][j] += grid.nodeAt(sampleI, j).weight;
+        }
+        for (let i = 1; i < NODES_PER_ROW; i++) {
+          let removeIndex = Math.max((i - kernalExtents - 1), 0);
+          let addIndex = Math.min((i + kernalExtents), NODES_PER_ROW - 1);
+          weightsHorizPass[i][j] = weightsHorizPass[i-1][j] - grid.nodeAt(removeIndex, j).weight + grid.nodeAt(addIndex, j).weight;
+        }
+      }
+
+      for (let i = 0; i < NODES_PER_ROW; i++) {
+        for (let j = -kernalExtents; j <= kernalExtents; j++) {
+          let sampleJ = clamp(j, 0, kernalExtents);
+          weightsVertPass[i][0] += weightsHorizPass[i][sampleJ];
+        }
+
+        let blurredWeight = Math.round(weightsVertPass[i][0] / (kernalSize * kernalSize));
+        grid.nodeAt(i, 0).weight = blurredWeight;
+
+        for (let j = 1; j < NODES_PER_COL; j++) {
+          let removeIndex = Math.max((j - kernalExtents - 1), 0);
+          let addIndex = Math.min((j + kernalExtents - 1), NODES_PER_COL - 1);
+          weightsVertPass[i][j] = weightsVertPass[i][j-1] - weightsHorizPass[i][removeIndex] + weightsHorizPass[i][addIndex];
+
+          blurredWeight = Math.round(weightsVertPass[i][j] / (kernalSize * kernalSize));
+          grid.nodeAt(i, j).weight = blurredWeight;
+
+          /*
+          if (blurredWeight > weightMax) {
+            weightMax = blurredWeight;
+          }
+          if (blurredWeight < weightMin) {
+            weightMin = blurredWeight;
+          }
+          */
+
+        }
+      }
+    };
+
+
+    blurWeightMap(3);
+  }
+
   return {
     get seededRandom(){return seededRandom;},
     get grid(){return grid;},
