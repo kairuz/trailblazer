@@ -130,6 +130,7 @@ const animate = () => {
 
 const stopAnimation = () => {
   cancelAnimationFrame(animationRequestId);
+  requestAnimationFrame(draw);
 };
 
 
