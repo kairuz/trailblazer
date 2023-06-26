@@ -17,7 +17,7 @@ const randomChoice = (arr, randomNum = Math.random) => {
 };
 const randomChance = (outOf, randomNum = Math.random) => randomInt(outOf, randomNum) === 0;
 
-
+// thanks https://stackoverflow.com/questions/521295/seeding-the-random-number-generator-in-javascript#answer-29450606
 const seed = (s) => {
   const mask = 0xffffffff;
   let m_w  = (123456789 + s) & mask;
