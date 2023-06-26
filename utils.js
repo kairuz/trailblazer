@@ -18,12 +18,12 @@ const randomChoice = (arr, randomNum = Math.random) => {
 const randomChance = (outOf, randomNum = Math.random) => randomInt(outOf, randomNum) === 0;
 
 
-const seed = function(s) {
+const seed = (s) => {
   const mask = 0xffffffff;
   let m_w  = (123456789 + s) & mask;
   let m_z  = (987654321 - s) & mask;
 
-  return function() {
+  return () => {
     m_z = (36969 * (m_z & 65535) + (m_z >>> 16)) & mask;
     m_w = (18000 * (m_w & 65535) + (m_w >>> 16)) & mask;
 
