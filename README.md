@@ -8,6 +8,6 @@ Pathfinding is handled in a web worker asynchronously, allowing for concurrent p
 Rendering is implemented in a web worker using an OffscreenCanvas.
 
 todos:
-- weight blurring
+- weight blurring (in progress)
 - path smoothing
 - lerp animation
