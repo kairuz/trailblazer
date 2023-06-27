@@ -12,13 +12,10 @@ const Cost = () => {
   };
 };
 
-const Node = (posX, posY, size, walkable, i, j) => {
+const Node = (posX, posY, size, i, j) => {
+  let walkable = true;
   let weight = 20;
   return {
-    reset(){
-      weight = 10;
-    },
-
     set weight(_weight){weight = _weight;},
     set walkable(_walkable){walkable = _walkable;},
     get weight(){return weight;},
@@ -31,22 +28,8 @@ const Node = (posX, posY, size, walkable, i, j) => {
     get leftPos(){return posX - (size / 2);},
     get rightPos(){return this.leftPos + size;},
     get topPos(){return posY - (size / 2);},
-    get bottomPos(){return this.topPos + size;},
-    toArr(){return Node.toArr(this);}
+    get bottomPos(){return this.topPos + size;}
   };
-};
-Node.toArr = (node) => {
-  return [node.posX, node.posY, node.size, node.walkable, node.i, node.j];
-};
-Node.fromArr = (_arr) => {
-  let ii = 0;
-  const posX      = _arr[ii++];
-  const posY      = _arr[ii++];
-  const size      = _arr[ii++];
-  const walkable  = _arr[ii++];
-  const i         = _arr[ii++];
-  const j         = _arr[ii++];
-  return Node(posX, posY, size, walkable, i, j);
 };
 
 const Obstacle = (posX, posY, width, height) => {
@@ -65,39 +48,35 @@ const Obstacle = (posX, posY, width, height) => {
 const Grid = (width, height, nodeSize, obstacles) => {
   const nodesPerRow = Math.trunc(width / nodeSize);
   const nodesPerCol = Math.trunc(height / nodeSize);
-  const walkableNodes = [];
-  const unwalkableNodes = [];
   const nodes
       = Array.from(Array(nodesPerRow)).map((_, i) => Array.from(Array(nodesPerCol)).map(
       (_, j) => {
         const nodeLeftPos = i * nodeSize;
-        const nodeRightPos = nodeLeftPos + nodeSize;
         const nodePosX = nodeLeftPos + (nodeSize / 2);
         const nodeTopPos = j * nodeSize;
-        const nodeBottomPos = nodeTopPos + nodeSize;
         const nodePosY = nodeTopPos + (nodeSize / 2);
 
-        const walkable = !obstacles.some((obstacle) => {
-          const combinedHalfWidths = (obstacle.width / 2) + (nodeSize / 2);
-          const combinedHalfHeights = (obstacle.height / 2) + (nodeSize / 2);
-          const xCenterDiff = Math.abs(nodePosX - obstacle.posX);
-          const yCenterDiff = Math.abs(nodePosY - obstacle.posY);
-
-          return xCenterDiff < combinedHalfWidths && yCenterDiff < combinedHalfHeights;
-        });
-
-        const node = Node(nodePosX, nodePosY, nodeSize, walkable, i, j);
-
-        if (walkable) {
-          walkableNodes.push(node);
-        }
-        else {
-          unwalkableNodes.push(node);
-        }
-        return node;
+        return Node(nodePosX, nodePosY, nodeSize, i, j);
       }
   ));
-  let path;
+
+  obstacles.forEach((obstacle) => {
+    const top = obstacle.posY - Math.trunc(obstacle.height / 2);
+    const bottom = top + obstacle.height;
+    const left = obstacle.posX - Math.trunc(obstacle.width / 2);
+    const right = left + obstacle.width;
+    const nodeRowTop = Math.max(0, Math.trunc(top / nodeSize));
+    const nodeRowBottom = Math.min(nodesPerCol - 1, Math.trunc(bottom / nodeSize));
+    const nodeColLeft = Math.max(0, Math.trunc(left / nodeSize));
+    const nodeColRight = Math.min(nodesPerRow - 1, Math.trunc(right / nodeSize));
+
+    for (let i = nodeColLeft; i <= nodeColRight; i++) {
+      for (let j = nodeRowTop; j <= nodeRowBottom; j++) {
+        nodes[i][j].walkable = false;
+      }
+    }
+  });
+
   return {
     get width(){return width},
     get height(){return height},
@@ -106,10 +85,6 @@ const Grid = (width, height, nodeSize, obstacles) => {
     get nodesPerRow(){return nodesPerRow;},
     get nodesPerCol(){return nodesPerCol;},
     get nodes(){return nodes;},
-    get walkableNodes(){return walkableNodes;},
-    get unwalkableNodes(){return unwalkableNodes;},
-    get path(){return path;},
-    set path(_path){path = _path;},
     nodeAt(i, j){return nodes[i][j];},
     getNeighbors(node) {
       const neighbors = [];
