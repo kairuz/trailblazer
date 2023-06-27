@@ -148,16 +148,19 @@ window.addEventListener('load', () => {
   const drawGrid = (_startNode, _targetNode) => {
     canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 
+    const obstaclePaddingPerc = 13.3333333;
+    const obstaclePadding = (grid.nodeSize * obstaclePaddingPerc / 100);
+
     grid.obstacles.forEach((obstacle, i) => {
       canvasContext.beginPath();
       canvasContext.fillStyle = 'black';
-      canvasContext.fillRect(obstacle.leftPos, obstacle.topPos, obstacle.width, obstacle.height);
+      canvasContext.fillRect(obstacle.leftPos + obstaclePadding, obstacle.topPos + obstaclePadding, obstacle.width - (obstaclePadding * 2), obstacle.height - (obstaclePadding * 2));
       canvasContext.closePath();
     });
 
     const walkablePaddingPerc = 10;
     const walkablePadding = (grid.nodeSize * walkablePaddingPerc / 100);
-    const unwalkablePaddingPerc = 13.3333333;
+    const unwalkablePaddingPerc = 10;
     const unwalkablePadding = (grid.nodeSize * unwalkablePaddingPerc / 100);
 
     for (let i = 0; i < grid.nodesPerRow; i++) {
@@ -170,8 +173,8 @@ window.addEventListener('load', () => {
                              grid.nodeSize - (walkablePadding * 2), grid.nodeSize - (walkablePadding * 2));
         }
         else {
-          canvasContext.fillStyle = 'crimson';
-          canvasContext.fillRect(i * grid.nodeSize + unwalkablePadding, j * grid.nodeSize + unwalkablePadding,
+          canvasContext.strokeStyle = 'crimson';
+          canvasContext.strokeRect(i * grid.nodeSize + unwalkablePadding, j * grid.nodeSize + unwalkablePadding,
                            grid.nodeSize - (unwalkablePadding * 2), grid.nodeSize - (unwalkablePadding * 2));
         }
         canvasContext.closePath();
