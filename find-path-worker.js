@@ -149,7 +149,7 @@ const updateNeighbors = (runningFindPath) => {
     const neighborCost = runningFindPath.costs.get(neighbor);
     const currentNodeCost = runningFindPath.costs .get(runningFindPath.currentNode);
 
-    const newMovementCostToNeighbor = currentNodeCost.gCost + getDistance(runningFindPath.currentNode, neighbor) + neighbor.weight;
+    const newMovementCostToNeighbor = currentNodeCost.gCost + getDistance(runningFindPath.currentNode, neighbor) + neighbor.blurredWeight;
     if (newMovementCostToNeighbor < neighborCost.gCost || !runningFindPath.openSet.contains(neighbor)) {
       neighborCost.gCost = newMovementCostToNeighbor;
       neighborCost.hCost = getDistance(neighbor, runningFindPath.targetNode);

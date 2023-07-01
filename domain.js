@@ -15,10 +15,13 @@ const Cost = () => {
 const Node = (posX, posY, size, i, j) => {
   let walkable = true;
   let weight = 20;
+  let blurredWeight = 0;
   return {
     set weight(_weight){weight = _weight;},
+    set blurredWeight(_blurredWeight){blurredWeight = _blurredWeight;},
     set walkable(_walkable){walkable = _walkable;},
     get weight(){return weight;},
+    get blurredWeight(){return blurredWeight;},
     get posX(){return posX;},
     get posY(){return posY;},
     get size(){return size;},
