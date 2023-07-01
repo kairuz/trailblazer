@@ -6,8 +6,8 @@ const SEED_PARAM_NAME = 'seed';
 const OPS_PER_ITER_PARAM_NAME = 'opsPerIter';
 const DEFAULT_OPS_PER_ITER = 100;
 
-// const NODE_SIZE = 10;
-const NODE_SIZE = 20;
+const NODE_SIZE = 10;
+// const NODE_SIZE = 20;
 // const NODE_SIZE = 10;
 const GRID_WIDTH = Math.trunc(1400 / NODE_SIZE) * NODE_SIZE;
 const GRID_HEIGHT = Math.trunc((GRID_WIDTH * 0.56) / NODE_SIZE) * NODE_SIZE;
