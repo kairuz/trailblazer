@@ -6,8 +6,8 @@ const SEED_PARAM_NAME = 'seed';
 const OPS_PER_ITER_PARAM_NAME = 'opsPerIter';
 const DEFAULT_OPS_PER_ITER = 100;
 
-// const NODE_SIZE = 10;
-const NODE_SIZE = 20;
+const NODE_SIZE = 10;
+// const NODE_SIZE = 20;
 // const NODE_SIZE = 10;
 const GRID_WIDTH = Math.trunc(1400 / NODE_SIZE) * NODE_SIZE;
 const GRID_HEIGHT = Math.trunc((GRID_WIDTH * 0.56) / NODE_SIZE) * NODE_SIZE;
@@ -125,7 +125,7 @@ const Context = (seededRandom = DEFAULT_SEEDED_RANDOM) => {
         }
 
         let blurredWeight = Math.round(weightsVertPass[i][0] / (kernalSize * kernalSize));
-        grid.nodeAt(i, 0).weight = blurredWeight;
+        grid.nodeAt(i, 0).blurredWeight = blurredWeight;
 
         for (let j = 1; j < NODES_PER_COL; j++) {
           let removeIndex = Math.max((j - kernalExtents - 1), 0);
@@ -133,7 +133,7 @@ const Context = (seededRandom = DEFAULT_SEEDED_RANDOM) => {
           weightsVertPass[i][j] = weightsVertPass[i][j-1] - weightsHorizPass[i][removeIndex] + weightsHorizPass[i][addIndex];
 
           blurredWeight = Math.round(weightsVertPass[i][j] / (kernalSize * kernalSize));
-          grid.nodeAt(i, j).weight = blurredWeight;
+          grid.nodeAt(i, j).blurredWeight = blurredWeight;
 
           /*
           if (blurredWeight > weightMax) {
