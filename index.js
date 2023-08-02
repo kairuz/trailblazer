@@ -22,18 +22,18 @@ window.addEventListener('load', () => {
                                             import.meta.url), {type: 'module'});
   findPathWorker.postMessage('wake up');
 
-  // const PATH_COLORS = ['lightgreen', 'orange', 'lightblue']; //, 'pink', 'yellow', 'sandybrown', 'midnightblue', 'cornflowerblue'];
   const PATH_COLORS = ['lightgreen', 'orange', 'lightblue', 'pink', 'yellow', 'sandybrown', 'midnightblue', 'cornflowerblue'];
 
+  const mainDiv = document.getElementById('main');
   const canvas = document.createElement('canvas');
-  document.body.appendChild(canvas);
+  mainDiv.appendChild(canvas);
   canvas.style.position = 'absolute';
   canvas.height = GRID_HEIGHT;
   canvas.width = GRID_WIDTH;
   const canvasContext = canvas.getContext('2d');
 
   const pathsAnimatorCanvas = document.createElement('canvas');
-  document.body.appendChild(pathsAnimatorCanvas);
+  mainDiv.appendChild(pathsAnimatorCanvas);
   pathsAnimatorCanvas.style.position = 'absolute';
   pathsAnimatorCanvas.height = GRID_HEIGHT;
   pathsAnimatorCanvas.width = GRID_WIDTH;
